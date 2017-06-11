@@ -1,0 +1,6 @@
+<!-- -*- mode: XML -*- -->
+
+<launch>
+    <node name="joint_state_listener" pkg="delta_robot" type="joint_state_listener" output="screen">
+    </node>
+</launch>

@@ -1,0 +1,51 @@
+<!-- -*- mode: XML -*- -->
+
+<launch>
+
+    <!-- Start the Dynamixel motor manager to control all base_motor servos -->
+   <include file="$(find delta_robot)/launch/controller_manager.launch" />
+    
+      <!-- Load joint controller configuration from YAML file to parameter server -->
+  <rosparam file="$(find delta_robot)/config/controllers.yaml" command="load"/>
+
+    <!-- Start all SmartArm joint controllers -->
+    <node name="controller_spawner" pkg="dynamixel_controllers" type="controller_spawner.py"
+          args="--manager=dxl_manager
+                --port delta_port
+                joint1_controller
+                joint2_controller			
+	        joint3_controller"
+		   output="screen"/>
+        
+   <!-- Start the base_motor arm trajectory controller -->
+	<rosparam file="$(find delta_robot)/config/delta_trajectory_controller.yaml" command="load"/>
+    <node name="controller_spawner_meta" pkg="dynamixel_controllers" type="controller_spawner.py" 
+    args="--manager=dxl_manager
+          --type=meta 
+          delta_trajectory_controller 
+          joint1_controller 
+          joint2_controller 
+          joint3_controller" 
+          output="screen"/>
+  
+  <!-- Publish combined joint info -->
+<!--  <include file="$(find delta_robot)/launch/joint_state_aggregator.launch" />-->
+  
+  <!-- Start Robot Description -->
+  <param name="robot_description" textfile="$(find delta_robot)/urdf/delta_robot_copy1.urdf" />
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" output="screen">
+  <rosparam param="source_list">['joint1', 'joint2', 'joint3']</rosparam>
+  <rosparam param="use_gui">TRUE</rosparam>
+  <param name="rate" value="20" />
+  </node>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find delta_robot)/urdf/urdf.rviz" />
+
+  <!-- Robot State Stream -->
+  <include file="$(find teleop_twist_joy)/launch/teleop.launch" />
+  <node name="robot_action_controller" pkg="delta_robot" type="joystick.py" />
+
+<!--  <node name="delta_passive" pkg="delta_robot-master" type="delta_robot_drawing.py" />-->
+
+  </launch>
+

@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+<launch>
+  <arg name="model" />
+  <arg name="gui" default="TRUE" />
+
+  <!-- Robot Description -->
+<!--  <param name="robot_description" command="$(find xacro)/xacro.py '$(find delta_robot)/urdf/delta_robot.xacro'" />-->
+  <param name="robot_description" textfile="$(find delta_robot)/urdf/delta_robot_copy.urdf" />
+  <param name="use_gui" value="$(arg gui)" />
+
+  <!-- Robot Joint State Publisher -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+
+  <!-- Publish combined joint info -->
+  <include file="$(find delta_robot)/launch/joint_state_aggregator.launch" />
+
+  <!-- Robot State Publisher -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+  <!-- Ragnar State Publisher -->
+<!--  <node name="ragnar_state_publisher" pkg="ragnar_state_publisher" type="ragnar_state_publisher_node" />-->
+
+  <!-- Ragnar State Publisher -->
+<!--  <node name="ragnar_simulator" pkg="ragnar_simulator" type="ragnar_simulator_node" />-->
+
+  <!-- Visualization -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find delta_robot)/urdf/urdf.rviz" />
+
+</launch>
