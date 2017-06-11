@@ -1,0 +1,83 @@
+<?xml version="1.0" ?>
+<robot name="SGUDeltaRobot" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:macro name="delta_arm" params="prefix num x y z r p w dxa dya dza dra dpa dwa dxb dyb dzb drb dpb dwb">
+
+  <!-- Upper Arm -->
+
+    <link name="${prefix}upper_arm_${num}">
+          <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <mesh filename="package://delta_robot/meshes/upper_arm_${num}.STL" />
+            </geometry>
+            <material name="">
+              <color rgba="0.75294 0.75294 0.75294 1" />
+            </material>
+          </visual>
+          <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <mesh filename="package://delta_robot/meshes/upper_arm_${num}.STL" />
+            </geometry>
+          </collision>
+    </link>
+    <joint name="${prefix}joint_${num}" type="revolute">
+      <origin xyz="${x} ${y} ${z}" rpy="${r} ${p} ${w}" />
+      <parent link="${prefix}base_link" />
+      <child link="${prefix}upper_arm_${num}" />
+      <axis xyz="1.0 0 0" />
+      <limit effort="10" lower="-0.71" upper="1.5" velocity="2.618"/>
+    </joint>
+
+  <!-- Lower Arm a -->
+
+    <link name="${prefix}lower_arm_${num}a">
+          <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <mesh filename="package://delta_robot/meshes/lower_arm.STL" />
+            </geometry>
+            <material name="">
+              <color rgba="0.75294 0.75294 0.75294 1" />
+            </material>
+          </visual>
+          <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <mesh filename="package://delta_robot/meshes/lower_arm.STL" />
+            </geometry>
+          </collision>
+    </link>
+    <joint name="${prefix}a${num}_j2a" type="floating">
+      <origin xyz="${dxa} ${dya} ${dza}" rpy="${dra} ${dpa} ${dwa}" />
+      <parent link="${prefix}upper_arm_${num}" />
+      <child link="${prefix}lower_arm_${num}a" />
+    </joint>
+
+  <!-- Lower Arm b -->
+
+    <link name="${prefix}lower_arm_${num}b">
+          <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <mesh filename="package://delta_robot/meshes/lower_arm.STL" />
+            </geometry>
+            <material name="">
+              <color rgba="0.75294 0.75294 0.75294 1" />
+            </material>
+          </visual>
+          <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <mesh filename="package://delta_robot/meshes/lower_arm.STL" />
+            </geometry>
+          </collision>
+    </link>
+    <joint name="${prefix}a${num}_j2b" type="floating">
+      <origin xyz="${dxb} ${dyb} ${dzb}" rpy="${drb} ${dpb} ${dwb}" />
+      <parent link="${prefix}upper_arm_${num}" />
+      <child link="${prefix}lower_arm_${num}b" />
+    </joint>
+
+  </xacro:macro>
+</robot>

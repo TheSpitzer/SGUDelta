@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<robot name="SGUDeltaRobot" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find delta_robot)/urdf/delta_robot_macro.xacro"/>
+  
+  <link name="world"/>
+
+  <xacro:delta prefix=""/>
+
+  <joint name="world_to_delta" type="fixed">
+    <parent link="world"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0" />
+  </joint>
+  
+</robot>
