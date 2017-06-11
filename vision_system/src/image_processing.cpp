@@ -13,7 +13,7 @@
 #include <math.h>
 
 static const std::string OPENCV_WINDOW = "Raw Image";
-//static const std::string OPENCV_WINDOW2 = "Binary Image";
+static const std::string OPENCV_WINDOW2 = "Binary Image";
 static const std::string OPENCV_WINDOW3 = "Processed Image";
 
 using namespace cv;
@@ -44,14 +44,14 @@ public:
 		image_pub_ = it_.advertise("/image_processing/output_video", 1);
 
 		namedWindow(OPENCV_WINDOW);
-//		namedWindow(OPENCV_WINDOW2);
+		namedWindow(OPENCV_WINDOW2);
 		namedWindow(OPENCV_WINDOW3);
 	}
 
 	~ImageProcessing()
 	{
 		destroyWindow(OPENCV_WINDOW);
-//		destroyWindow(OPENCV_WINDOW2);
+		destroyWindow(OPENCV_WINDOW2);
 		destroyWindow(OPENCV_WINDOW3);
 	}
 
@@ -149,16 +149,9 @@ public:
         	 	// draw the circle outline
          		circle( img_out_, center, radius+1, Scalar(0,0,255), 3, 8, 0 );
          		// Debugging Output
-//         		ROS_INFO("x: %d y: %d r: %d",center.x,center.y, radius);
-			// Publish the data
-	 	/*	coord_pub_ = it_.advertise<std_msgs::String>("Coordinate", 100);
-		coord_pub_ = nh_.advertise<std_msgs::Float32>("coordinate", 100);
-		std_msgs::Float32 msg;
-		msg.data = center.x;
-		msg.data = center.y;
+			ROS_INFO("x: %d y: %d r: %d",center.x,center.y, radius);
 			
-		coord_pub_.publish(msg);
-		*/
+		// Publish the data
 		coord_pub_ = nh_.advertise<geometry_msgs::Twist>("coordinate", 100);
 		geometry_msgs::Twist msg;
 		msg.linear.x = center.x;
@@ -169,7 +162,7 @@ public:
 
 		//Update GUI Window
 		imshow(OPENCV_WINDOW, img_in_);
-//		imshow(OPENCV_WINDOW2, img_bin_);
+		imshow(OPENCV_WINDOW2, img_bin_);
 		imshow(OPENCV_WINDOW3, img_out_);
 		
 		waitKey(3);
