@@ -12,13 +12,14 @@
 #include <stdio.h>
 #include <math.h>
 
+// Define Windows Name
 static const std::string OPENCV_WINDOW = "Raw Image";
-//static const std::string OPENCV_WINDOW2 = "Binary Image";
+static const std::string OPENCV_WINDOW2 = "Binary Image";
 static const std::string OPENCV_WINDOW3 = "Processed Image";
 
 using namespace cv;
 
-class ImageProcessing
+class ImageProcessing // Creating Image Processing Class
 {
 
 protected:
@@ -45,21 +46,21 @@ public:
 		image_pub_ = it_.advertise("/image_processing/output_video", 1);
 
 		namedWindow(OPENCV_WINDOW);
-//		namedWindow(OPENCV_WINDOW2);
+		namedWindow(OPENCV_WINDOW2);
 		namedWindow(OPENCV_WINDOW3);
 	}
 
-	~ImageProcessing()
+	~ImageProcessing() // Close Every Openned Window
 	{
 		destroyWindow(OPENCV_WINDOW);
-//		destroyWindow(OPENCV_WINDOW2);
+		destroyWindow(OPENCV_WINDOW2);
 		destroyWindow(OPENCV_WINDOW3);
 	}
 
 	void velCb(geometry_msgs::Vector3Stamped v)
 	{
-//		vel_pub_ = nh_.advertise<geometry_msgs::Twist>("coordinate", 100);
-//		vel_ = nh_.subscribe("/rpm", 100, &ImageProcessing::velCb, this);
+		vel_pub_ = nh_.advertise<geometry_msgs::Twist>("coordinate", 100);
+		vel_ = nh_.subscribe("/rpm", 100, &ImageProcessing::velCb, this);
 		geometry_msgs::Twist velocity;
 		velocity.angular.x = v.vector.x;
 		vel_pub_.publish(velocity);
@@ -111,10 +112,6 @@ public:
 				else
 				{
 					img_bin_.at<uchar>(ii,jj) = 0;
-/*					//Clear pixel BGR output channel
-					img_out_.at<uchar>(ii,jj*3+0) = 0;
-					img_out_.at<uchar>(ii,jj*3+1) = 0;
-					img_out_.at<uchar>(ii,jj*3+2) = 0;*/
 				}
 			}
 		}
@@ -152,16 +149,9 @@ public:
         	 	// draw the circle outline
          		circle( img_out_, center, radius+1, Scalar(0,0,255), 3, 8, 0 );
          		// Debugging Output
-//         		ROS_INFO("x: %d y: %d r: %d",center.x,center.y, radius);
-			// Publish the data
-	 	/*	coord_pub_ = it_.advertise<std_msgs::String>("Coordinate", 100);
-		coord_pub_ = nh_.advertise<std_msgs::Float32>("coordinate", 100);
-		std_msgs::Float32 msg;
-		msg.data = center.x;
-		msg.data = center.y;
+         		ROS_INFO("x: %d y: %d r: %d",center.x,center.y, radius);
 			
-		coord_pub_.publish(msg);
-		*/
+		// Publish the data
 		coord_pub_ = nh_.advertise<geometry_msgs::Twist>("coordinate", 100);
 		geometry_msgs::Twist msg;
 		msg.linear.x = center.x;
@@ -171,18 +161,10 @@ public:
 
 		//Update GUI Window
 		imshow(OPENCV_WINDOW, img_in_);
-//		imshow(OPENCV_WINDOW2, img_bin_);
+		imshow(OPENCV_WINDOW2, img_bin_);
 		imshow(OPENCV_WINDOW3, img_out_);
 		
 		waitKey(3);
-
-		//Convert cv::Mat to IplImage
-//		cv_bridge::CvImage img_out_;
-//		img_out_.encoding = sensor_msgs::image_encodings::BGR8;
-//		img_out_.image = img_hsv_;
-
-		//Publish Output Image
-//		image_pub_.publish(img_out_.toImageMsg());
 
 	}
 };
@@ -192,7 +174,8 @@ int main(int argc, char** argv)
 	//Initialize ROS Node
 	ros::init(argc, argv, "image_processing");
 
-//	ros::Subscriber rpm_ = nh_.subscribe("/rpm", 100, velCb);
+	ros::Subscriber rpm_ = nh_.subscribe("/rpm", 100, velCb);
+	
 	//Start Node
 	ImageProcessing ip;
 
