@@ -3,10 +3,9 @@
 <launch>
 
     <!-- Start Vision System Node -->
-<!--  	<include file="$(find vision_system)/launch/ps3Eye.launch" />-->
-<!--  	<node name="arduino" pkg="rosserial_python" type="serial_node.py"-->
-<!--  			args="/dev/ttyACM0"-->
-<!--  			respawn="true" />-->
+  	<include file="$(find vision_system)/launch/ps3Eye.launch" />
+ 	<node name="arduino" pkg="rosserial_python" type="serial_node.py"
+ 		args="/dev/ttyACM0"  respawn="true" />
 
     <!-- Start Dynamixel Motor Manager -->
   	<include file="$(find delta_robot)/launch/controller_manager.launch" />
@@ -20,8 +19,8 @@
                 --port delta_port
                 joint1_controller
                 joint2_controller			
-	        	joint3_controller"
-		   output="screen"/>
+	        joint3_controller"
+		output="screen"/>
         
    	<!-- Start the base_motor arm trajectory controller -->
 	<rosparam file="$(find delta_robot)/config/delta_trajectory_controller.yaml" command="load"/>
@@ -47,12 +46,8 @@
   	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
   	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find delta_robot)/urdf/urdf.rviz" />
 
-  	<!-- Robot State Stream -->
-<!--  	<include file="$(find delta_robot)/launch/joint_state_listener.launch" />-->
-
   	<!-- Joystick Controller -->
 <!--  	<include file="$(find teleop_twist_joy)/launch/teleop.launch" />-->
   	<node name="robot_action_controller" pkg="delta_robot" type="joystick.py" />
-<!--  <node name="joystik_controller" pkg="delta_robot" type="joystick_controller" />-->
 
 </launch>
